@@ -1,5 +1,3 @@
-$ cat /home/user/Game-Test/index.html
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +24,6 @@ $ cat /home/user/Game-Test/index.html
     header h1 { font-size: 2rem; color: #cc99ff; letter-spacing: 2px; }
     header p  { color: #888aff; font-size: 0.9rem; margin-top: 4px; }
 
-    /* ── Setup screen ── */
     #setup {
       display: flex;
       flex-direction: column;
@@ -49,9 +46,7 @@ $ cat /home/user/Game-Test/index.html
     }
 
     .player-setup h3 { margin-bottom: 14px; color: #aa88ff; }
-
     .player-setup label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 4px; }
-
     .player-setup input, .player-setup select {
       width: 100%;
       padding: 8px 12px;
@@ -78,7 +73,6 @@ $ cat /home/user/Game-Test/index.html
     .btn-success { background: #007744; color: #fff; }
     .btn-sm { padding: 5px 14px; font-size: 0.85rem; }
 
-    /* ── Game screen ── */
     #game { display: none; padding: 12px; }
 
     .turn-banner {
@@ -90,7 +84,6 @@ $ cat /home/user/Game-Test/index.html
       margin-bottom: 12px;
       font-size: 1.1rem;
     }
-
     .turn-banner span { color: #cc99ff; font-weight: bold; }
 
     .boards {
@@ -98,7 +91,6 @@ $ cat /home/user/Game-Test/index.html
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
-
     @media (max-width: 700px) {
       .boards { grid-template-columns: 1fr; }
     }
@@ -109,7 +101,6 @@ $ cat /home/user/Game-Test/index.html
       border-radius: 12px;
       padding: 12px;
     }
-
     .board h3 {
       text-align: center;
       margin-bottom: 10px;
@@ -135,23 +126,26 @@ $ cat /home/user/Game-Test/index.html
       line-height: 1.2;
       user-select: none;
     }
-
     .char-card .emoji { font-size: 1.4rem; }
-
+    .char-card .char-img {
+      width: 44px;
+      height: 44px;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+      margin: 0 auto;
+    }
     .char-card:hover { border-color: #6600cc; }
-
     .char-card.eliminated {
       opacity: 0.18;
       cursor: default;
       border-color: #222;
     }
-
     .char-card.secret {
       border-color: #ffcc00 !important;
       background: #221a00;
     }
 
-    /* ── Action panel ── */
     .action-panel {
       margin-top: 12px;
       background: #1a1a2e;
@@ -159,7 +153,6 @@ $ cat /home/user/Game-Test/index.html
       border-radius: 12px;
       padding: 14px;
     }
-
     .action-panel h3 { color: #aa88ff; margin-bottom: 10px; }
 
     .traits {
@@ -168,7 +161,6 @@ $ cat /home/user/Game-Test/index.html
       gap: 8px;
       margin-bottom: 12px;
     }
-
     .trait-btn {
       padding: 6px 14px;
       border-radius: 20px;
@@ -188,7 +180,6 @@ $ cat /home/user/Game-Test/index.html
       flex-wrap: wrap;
       align-items: center;
     }
-
     .guess-section select {
       flex: 1;
       min-width: 140px;
@@ -211,13 +202,11 @@ $ cat /home/user/Game-Test/index.html
       font-size: 0.82rem;
       color: #aaa;
     }
-
     .log p { margin-bottom: 4px; }
     .log .yes { color: #55ff88; }
     .log .no  { color: #ff5555; }
     .log .sys { color: #aaaaff; }
 
-    /* ── Modal ── */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -228,7 +217,6 @@ $ cat /home/user/Game-Test/index.html
       justify-content: center;
     }
     .modal-overlay.show { display: flex; }
-
     .modal {
       background: #1a1a2e;
       border: 2px solid #6600cc;
@@ -238,11 +226,9 @@ $ cat /home/user/Game-Test/index.html
       max-width: 380px;
       width: 90%;
     }
-
     .modal h2 { font-size: 1.8rem; color: #cc99ff; margin-bottom: 10px; }
     .modal p  { color: #aaa; margin-bottom: 20px; }
 
-    /* Secret character reveal */
     #secretReveal {
       display: none;
       position: fixed;
@@ -277,61 +263,47 @@ $ cat /home/user/Game-Test/index.html
   <p>2-Player Edition &bull; 30 Characters Each</p>
 </header>
 
-<!-- ══════════════════════ SETUP ══════════════════════ -->
 <div id="setup">
   <h2>Player Setup</h2>
-
   <div class="player-setup">
     <h3>Player 1</h3>
     <label>Name</label>
     <input id="p1name" type="text" value="Player 1" />
   </div>
-
   <div class="player-setup">
     <h3>Player 2</h3>
     <label>Name</label>
     <input id="p2name" type="text" value="Player 2" />
   </div>
-
   <button class="btn btn-primary" onclick="startGame()">Start Game</button>
 </div>
 
-<!-- ══════════════════════ GAME ══════════════════════ -->
 <div id="game">
   <div class="turn-banner">
     Turn: <span id="turnLabel"></span> &mdash; Ask a question or make a guess!
   </div>
-
   <div class="boards">
-    <!-- Player 1 board -->
     <div class="board" id="board0">
       <h3 id="boardTitle0"></h3>
       <div class="char-grid" id="grid0"></div>
     </div>
-    <!-- Player 2 board -->
     <div class="board" id="board1">
       <h3 id="boardTitle1"></h3>
       <div class="char-grid" id="grid1"></div>
     </div>
   </div>
-
-  <!-- Action panel -->
   <div class="action-panel">
     <h3>&#x1F4AC; <span id="actionTitle"></span>'s Actions</h3>
-
     <div id="traitButtons" class="traits"></div>
-
     <div class="guess-section">
       <select id="guessSelect"></select>
       <button class="btn btn-success btn-sm" onclick="makeGuess()">Make Final Guess</button>
       <button class="btn btn-danger btn-sm" onclick="endTurn()">End Turn (Pass)</button>
     </div>
-
     <div class="log" id="log"></div>
   </div>
 </div>
 
-<!-- ══════════════════════ MODALS ══════════════════════ -->
 <div class="modal-overlay" id="winModal">
   <div class="modal">
     <h2 id="winTitle"></h2>
@@ -340,7 +312,6 @@ $ cat /home/user/Game-Test/index.html
   </div>
 </div>
 
-<!-- Secret character reveal between turns -->
 <div id="secretReveal">
   <h2 id="revealTitle"></h2>
   <div class="big-card">
@@ -352,75 +323,98 @@ $ cat /home/user/Game-Test/index.html
 </div>
 
 <script>
-// ─────────────────────────────────────────────
-//  CHARACTER DATA  (30 characters)
-// ─────────────────────────────────────────────
 const CHARS = [
-  { name:"Naruto",       emoji:"🍥", series:"Naruto",       hair:"blonde",  eyes:"blue",   gender:"male",   power:"ninjutsu",  tall:true,  scar:false, glasses:false, villain:false, calm:false },
-  { name:"Sasuke",       emoji:"⚡", series:"Naruto",       hair:"black",   eyes:"dark",   gender:"male",   power:"ninjutsu",  tall:true,  scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Sakura",       emoji:"🌸", series:"Naruto",       hair:"pink",    eyes:"green",  gender:"female", power:"taijutsu",  tall:false, scar:false, glasses:false, villain:false, calm:false },
-  { name:"Goku",         emoji:"🐉", series:"DBZ",          hair:"black",   eyes:"black",  gender:"male",   power:"ki",        tall:true,  scar:false, glasses:false, villain:false, calm:false },
-  { name:"Vegeta",       emoji:"👑", series:"DBZ",          hair:"black",   eyes:"dark",   gender:"male",   power:"ki",        tall:false, scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Bulma",        emoji:"💙", series:"DBZ",          hair:"blue",    eyes:"blue",   gender:"female", power:"science",   tall:false, scar:false, glasses:false, villain:false, calm:false },
-  { name:"Luffy",        emoji:"🎩", series:"One Piece",    hair:"black",   eyes:"black",  gender:"male",   power:"devil",     tall:false, scar:true,  glasses:false, villain:false, calm:false },
-  { name:"Zoro",         emoji:"⚔️", series:"One Piece",    hair:"green",   eyes:"dark",   gender:"male",   power:"swords",    tall:true,  scar:true,  glasses:false, villain:false, calm:true  },
-  { name:"Nami",         emoji:"🌊", series:"One Piece",    hair:"orange",  eyes:"brown",  gender:"female", power:"weather",   tall:false, scar:false, glasses:false, villain:false, calm:false },
-  { name:"Ichigo",       emoji:"🌙", series:"Bleach",       hair:"orange",  eyes:"brown",  gender:"male",   power:"reiatsu",   tall:true,  scar:false, glasses:false, villain:false, calm:false },
-  { name:"Rukia",        emoji:"❄️", series:"Bleach",       hair:"black",   eyes:"violet", gender:"female", power:"reiatsu",   tall:false, scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Aizen",        emoji:"😏", series:"Bleach",       hair:"brown",   eyes:"brown",  gender:"male",   power:"reiatsu",   tall:true,  scar:false, glasses:true,  villain:true,  calm:true  },
-  { name:"Edward",       emoji:"⚙️", series:"FMA",          hair:"blonde",  eyes:"gold",   gender:"male",   power:"alchemy",   tall:false, scar:false, glasses:false, villain:false, calm:false },
-  { name:"Alphonse",     emoji:"🛡️", series:"FMA",          hair:"none",    eyes:"gold",   gender:"male",   power:"alchemy",   tall:true,  scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Roy Mustang",  emoji:"🔥", series:"FMA",          hair:"black",   eyes:"dark",   gender:"male",   power:"alchemy",   tall:true,  scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Levi",         emoji:"🗡️", series:"AoT",          hair:"black",   eyes:"grey",   gender:"male",   power:"blades",    tall:false, scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Eren",         emoji:"🔑", series:"AoT",          hair:"brown",   eyes:"teal",   gender:"male",   power:"titan",     tall:true,  scar:false, glasses:false, villain:true,  calm:false },
-  { name:"Mikasa",       emoji:"🏹", series:"AoT",          hair:"black",   eyes:"grey",   gender:"female", power:"blades",    tall:true,  scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Deku",         emoji:"💪", series:"MHA",          hair:"green",   eyes:"green",  gender:"male",   power:"quirk",     tall:false, scar:false, glasses:false, villain:false, calm:false },
-  { name:"Bakugo",       emoji:"💥", series:"MHA",          hair:"blonde",  eyes:"red",    gender:"male",   power:"quirk",     tall:false, scar:false, glasses:false, villain:false, calm:false },
-  { name:"Todoroki",     emoji:"🌓", series:"MHA",          hair:"split",   eyes:"grey",   gender:"male",   power:"quirk",     tall:true,  scar:true,  glasses:false, villain:false, calm:true  },
-  { name:"Killua",       emoji:"⚡", series:"HxH",          hair:"white",   eyes:"blue",   gender:"male",   power:"nen",       tall:false, scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Gon",          emoji:"🎣", series:"HxH",          hair:"black",   eyes:"gold",   gender:"male",   power:"nen",       tall:false, scar:false, glasses:false, villain:false, calm:false },
-  { name:"Hisoka",       emoji:"🃏", series:"HxH",          hair:"red",     eyes:"gold",   gender:"male",   power:"nen",       tall:true,  scar:false, glasses:false, villain:true,  calm:true  },
-  { name:"Spike",        emoji:"🚀", series:"Cowboy Bebop", hair:"brown",   eyes:"brown",  gender:"male",   power:"martial",   tall:true,  scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Asuka",        emoji:"🎌", series:"Evangelion",   hair:"auburn",  eyes:"blue",   gender:"female", power:"mech",      tall:false, scar:false, glasses:false, villain:false, calm:false },
-  { name:"Rei",          emoji:"🌐", series:"Evangelion",   hair:"blue",    eyes:"red",    gender:"female", power:"mech",      tall:false, scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Light Yagami", emoji:"📓", series:"Death Note",   hair:"brown",   eyes:"brown",  gender:"male",   power:"death",     tall:true,  scar:false, glasses:false, villain:true,  calm:true  },
-  { name:"L",            emoji:"🍰", series:"Death Note",   hair:"black",   eyes:"dark",   gender:"male",   power:"intellect", tall:false, scar:false, glasses:false, villain:false, calm:true  },
-  { name:"Itachi",       emoji:"🦅", series:"Naruto",       hair:"black",   eyes:"dark",   gender:"male",   power:"ninjutsu",  tall:true,  scar:false, glasses:false, villain:true,  calm:true  },
+  { name:"Naruto",       emoji:"🍥", malId:17,     series:"Naruto",       hair:"blonde",  eyes:"blue",   gender:"male",   power:"ninjutsu",  tall:true,  scar:false, glasses:false, villain:false, calm:false },
+  { name:"Sasuke",       emoji:"⚡",  malId:13,     series:"Naruto",       hair:"black",   eyes:"dark",   gender:"male",   power:"ninjutsu",  tall:true,  scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Sakura",       emoji:"🌸", malId:14,     series:"Naruto",       hair:"pink",    eyes:"green",  gender:"female", power:"taijutsu",  tall:false, scar:false, glasses:false, villain:false, calm:false },
+  { name:"Goku",         emoji:"🐉", malId:246,    series:"DBZ",          hair:"black",   eyes:"black",  gender:"male",   power:"ki",        tall:true,  scar:false, glasses:false, villain:false, calm:false },
+  { name:"Vegeta",       emoji:"👑", malId:913,    series:"DBZ",          hair:"black",   eyes:"dark",   gender:"male",   power:"ki",        tall:false, scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Bulma",        emoji:"💙", malId:916,    series:"DBZ",          hair:"blue",    eyes:"blue",   gender:"female", power:"science",   tall:false, scar:false, glasses:false, villain:false, calm:false },
+  { name:"Luffy",        emoji:"🎩", malId:40,     series:"One Piece",    hair:"black",   eyes:"black",  gender:"male",   power:"devil",     tall:false, scar:true,  glasses:false, villain:false, calm:false },
+  { name:"Zoro",         emoji:"⚔️", malId:62,     series:"One Piece",    hair:"green",   eyes:"dark",   gender:"male",   power:"swords",    tall:true,  scar:true,  glasses:false, villain:false, calm:true  },
+  { name:"Nami",         emoji:"🌊", malId:723,    series:"One Piece",    hair:"orange",  eyes:"brown",  gender:"female", power:"weather",   tall:false, scar:false, glasses:false, villain:false, calm:false },
+  { name:"Ichigo",       emoji:"🌙", malId:5,      series:"Bleach",       hair:"orange",  eyes:"brown",  gender:"male",   power:"reiatsu",   tall:true,  scar:false, glasses:false, villain:false, calm:false },
+  { name:"Rukia",        emoji:"❄️", malId:6,      series:"Bleach",       hair:"black",   eyes:"violet", gender:"female", power:"reiatsu",   tall:false, scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Aizen",        emoji:"😏", malId:9,      series:"Bleach",       hair:"brown",   eyes:"brown",  gender:"male",   power:"reiatsu",   tall:true,  scar:false, glasses:true,  villain:true,  calm:true  },
+  { name:"Edward",       emoji:"⚙️", malId:11,     series:"FMA",          hair:"blonde",  eyes:"gold",   gender:"male",   power:"alchemy",   tall:false, scar:false, glasses:false, villain:false, calm:false },
+  { name:"Alphonse",     emoji:"🛡️", malId:12,     series:"FMA",          hair:"none",    eyes:"gold",   gender:"male",   power:"alchemy",   tall:true,  scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Roy Mustang",  emoji:"🔥", malId:68,     series:"FMA",          hair:"black",   eyes:"dark",   gender:"male",   power:"alchemy",   tall:true,  scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Levi",         emoji:"🗡️", malId:37090,  series:"AoT",          hair:"black",   eyes:"grey",   gender:"male",   power:"blades",    tall:false, scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Eren",         emoji:"🔑", malId:40881,  series:"AoT",          hair:"brown",   eyes:"teal",   gender:"male",   power:"titan",     tall:true,  scar:false, glasses:false, villain:true,  calm:false },
+  { name:"Mikasa",       emoji:"🏹", malId:40882,  series:"AoT",          hair:"black",   eyes:"grey",   gender:"female", power:"blades",    tall:true,  scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Deku",         emoji:"💪", malId:142767, series:"MHA",          hair:"green",   eyes:"green",  gender:"male",   power:"quirk",     tall:false, scar:false, glasses:false, villain:false, calm:false },
+  { name:"Bakugo",       emoji:"💥", malId:142768, series:"MHA",          hair:"blonde",  eyes:"red",    gender:"male",   power:"quirk",     tall:false, scar:false, glasses:false, villain:false, calm:false },
+  { name:"Todoroki",     emoji:"🌓", malId:142771, series:"MHA",          hair:"split",   eyes:"grey",   gender:"male",   power:"quirk",     tall:true,  scar:true,  glasses:false, villain:false, calm:true  },
+  { name:"Killua",       emoji:"⚡",  malId:56,     series:"HxH",          hair:"white",   eyes:"blue",   gender:"male",   power:"nen",       tall:false, scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Gon",          emoji:"🎣", malId:55,     series:"HxH",          hair:"black",   eyes:"gold",   gender:"male",   power:"nen",       tall:false, scar:false, glasses:false, villain:false, calm:false },
+  { name:"Hisoka",       emoji:"🃏", malId:57,     series:"HxH",          hair:"red",     eyes:"gold",   gender:"male",   power:"nen",       tall:true,  scar:false, glasses:false, villain:true,  calm:true  },
+  { name:"Spike",        emoji:"🚀", malId:1,      series:"Cowboy Bebop", hair:"brown",   eyes:"brown",  gender:"male",   power:"martial",   tall:true,  scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Asuka",        emoji:"🎌", malId:253,    series:"Evangelion",   hair:"auburn",  eyes:"blue",   gender:"female", power:"mech",      tall:false, scar:false, glasses:false, villain:false, calm:false },
+  { name:"Rei",          emoji:"🌐", malId:252,    series:"Evangelion",   hair:"blue",    eyes:"red",    gender:"female", power:"mech",      tall:false, scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Light Yagami", emoji:"📓", malId:80,     series:"Death Note",   hair:"brown",   eyes:"brown",  gender:"male",   power:"death",     tall:true,  scar:false, glasses:false, villain:true,  calm:true  },
+  { name:"L",            emoji:"🍰", malId:71,     series:"Death Note",   hair:"black",   eyes:"dark",   gender:"male",   power:"intellect", tall:false, scar:false, glasses:false, villain:false, calm:true  },
+  { name:"Itachi",       emoji:"🦅", malId:269,    series:"Naruto",       hair:"black",   eyes:"dark",   gender:"male",   power:"ninjutsu",  tall:true,  scar:false, glasses:false, villain:true,  calm:true  },
 ];
 
-// ─────────────────────────────────────────────
-//  QUESTION TRAITS
-// ─────────────────────────────────────────────
 const QUESTIONS = [
-  { label:"Is it male?",         key:"gender",  val:"male"    },
-  { label:"Is it female?",       key:"gender",  val:"female"  },
-  { label:"Blonde hair?",        key:"hair",    val:"blonde"  },
-  { label:"Black hair?",         key:"hair",    val:"black"   },
-  { label:"Dark eyes?",          key:"eyes",    val:"dark"    },
-  { label:"Blue eyes?",          key:"eyes",    val:"blue"    },
-  { label:"Tall?",               key:"tall",    val:true      },
-  { label:"Has a scar?",         key:"scar",    val:true      },
-  { label:"Wears glasses?",      key:"glasses", val:true      },
-  { label:"A villain?",          key:"villain", val:true      },
-  { label:"Calm personality?",   key:"calm",    val:true      },
-  { label:"From Naruto?",        key:"series",  val:"Naruto"  },
-  { label:"From DBZ?",           key:"series",  val:"DBZ"     },
-  { label:"From One Piece?",     key:"series",  val:"One Piece"},
-  { label:"From Bleach?",        key:"series",  val:"Bleach"  },
-  { label:"From MHA?",           key:"series",  val:"MHA"     },
-  { label:"From HxH?",           key:"series",  val:"HxH"     },
-  { label:"From AoT?",           key:"series",  val:"AoT"     },
-  { label:"From FMA?",           key:"series",  val:"FMA"     },
-  { label:"Uses a blade/sword?", key:"power",   val:"swords"  },
-  { label:"Has devil fruit?",    key:"power",   val:"devil"   },
-  { label:"Uses ki/energy?",     key:"power",   val:"ki"      },
-  { label:"Uses alchemy?",       key:"power",   val:"alchemy" },
-  { label:"Uses nen?",           key:"power",   val:"nen"     },
+  { label:"Is it male?",         key:"gender",  val:"male"     },
+  { label:"Is it female?",       key:"gender",  val:"female"   },
+  { label:"Blonde hair?",        key:"hair",    val:"blonde"   },
+  { label:"Black hair?",         key:"hair",    val:"black"    },
+  { label:"Dark eyes?",          key:"eyes",    val:"dark"     },
+  { label:"Blue eyes?",          key:"eyes",    val:"blue"     },
+  { label:"Tall?",               key:"tall",    val:true       },
+  { label:"Has a scar?",         key:"scar",    val:true       },
+  { label:"Wears glasses?",      key:"glasses", val:true       },
+  { label:"A villain?",          key:"villain", val:true       },
+  { label:"Calm personality?",   key:"calm",    val:true       },
+  { label:"From Naruto?",        key:"series",  val:"Naruto"   },
+  { label:"From DBZ?",           key:"series",  val:"DBZ"      },
+  { label:"From One Piece?",     key:"series",  val:"One Piece" },
+  { label:"From Bleach?",        key:"series",  val:"Bleach"   },
+  { label:"From MHA?",           key:"series",  val:"MHA"      },
+  { label:"From HxH?",           key:"series",  val:"HxH"      },
+  { label:"From AoT?",           key:"series",  val:"AoT"      },
+  { label:"From FMA?",           key:"series",  val:"FMA"      },
+  { label:"Uses a blade/sword?", key:"power",   val:"swords"   },
+  { label:"Has devil fruit?",    key:"power",   val:"devil"    },
+  { label:"Uses ki/energy?",     key:"power",   val:"ki"       },
+  { label:"Uses alchemy?",       key:"power",   val:"alchemy"  },
+  { label:"Uses nen?",           key:"power",   val:"nen"      },
 ];
 
-// ─────────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────────
+const charImages = {};
+
+async function loadCharacterImages() {
+  const BATCH = 3;
+  for (let i = 0; i < CHARS.length; i += BATCH) {
+    const batch = CHARS.slice(i, i + BATCH);
+    await Promise.all(batch.map(async c => {
+      if (!c.malId) return;
+      try {
+        const res = await fetch(`https://api.jikan.moe/v4/characters/${c.malId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const url = data?.data?.images?.jpg?.image_url;
+        if (url) {
+          charImages[c.malId] = url;
+          document.querySelectorAll(`.char-img[data-malid="${c.malId}"]`).forEach(img => {
+            img.src = url;
+            img.style.display = 'block';
+            img.nextElementSibling.style.display = 'none';
+          });
+          document.querySelectorAll(`.reveal-img[data-malid="${c.malId}"]`).forEach(img => {
+            img.src = url;
+            img.style.display = 'block';
+            img.nextElementSibling.style.display = 'none';
+          });
+        }
+      } catch(e) {}
+    }));
+    if (i + BATCH < CHARS.length) await new Promise(r => setTimeout(r, 400));
+  }
+}
+
 let players, secrets, eliminated, askedQuestions, currentTurn, gameOver;
 
 function startGame() {
@@ -428,20 +422,20 @@ function startGame() {
   const n2 = document.getElementById('p2name').value.trim() || 'Player 2';
   players = [n1, n2];
 
-  // Each player gets a random secret character
   const idx1 = Math.floor(Math.random() * CHARS.length);
   let idx2;
   do { idx2 = Math.floor(Math.random() * CHARS.length); } while (idx2 === idx1);
   secrets = [CHARS[idx1], CHARS[idx2]];
 
-  eliminated   = [new Set(), new Set()];
+  eliminated     = [new Set(), new Set()];
   askedQuestions = [new Set(), new Set()];
-  currentTurn  = 0;
-  gameOver     = false;
+  currentTurn    = 0;
+  gameOver       = false;
 
   document.getElementById('setup').style.display = 'none';
   document.getElementById('game').style.display  = 'block';
 
+  loadCharacterImages();
   buildBoards();
   showSecretReveal(0, () => {
     showSecretReveal(1, () => {
@@ -450,22 +444,17 @@ function startGame() {
   });
 }
 
-// ─────────────────────────────────────────────
-//  BOARD RENDERING
-// ─────────────────────────────────────────────
 function buildBoards() {
   for (let p = 0; p < 2; p++) {
-    document.getElementById('boardTitle' + p).textContent =
-      players[p] + "'s Board";
-
+    document.getElementById('boardTitle' + p).textContent = players[p] + "'s Board";
     const grid = document.getElementById('grid' + p);
     grid.innerHTML = '';
     CHARS.forEach((c, i) => {
       const div = document.createElement('div');
       div.className = 'char-card';
       div.id = `card-${p}-${i}`;
-      div.innerHTML = `<div class="emoji">${c.emoji}</div><div>${c.name}</div>`;
-      // Only the CURRENT board owner can flip their own cards
+      const imgUrl = charImages[c.malId] || '';
+      div.innerHTML = `<img class="char-img" data-malid="${c.malId}" src="${imgUrl}" alt="${c.name}" style="${imgUrl ? '' : 'display:none'}"><div class="emoji" style="${imgUrl ? 'display:none' : ''}">${c.emoji}</div><div>${c.name}</div>`;
       div.onclick = () => toggleEliminate(p, i);
       grid.appendChild(div);
     });
@@ -485,9 +474,8 @@ function refreshBoards() {
 
 function toggleEliminate(boardPlayer, charIdx) {
   if (gameOver) return;
-  // Players can only eliminate on their OWN board
   if (boardPlayer !== currentTurn) return;
-  if (CHARS[charIdx] === secrets[currentTurn]) return; // can't eliminate secret
+  if (CHARS[charIdx] === secrets[currentTurn]) return;
   if (eliminated[boardPlayer].has(charIdx)) {
     eliminated[boardPlayer].delete(charIdx);
   } else {
@@ -496,23 +484,18 @@ function toggleEliminate(boardPlayer, charIdx) {
   refreshBoards();
 }
 
-// ─────────────────────────────────────────────
-//  SECRET REVEAL
-// ─────────────────────────────────────────────
 let _revealCallback = null;
 
 function showSecretReveal(playerIdx, callback) {
   _revealCallback = callback;
   const sec = secrets[playerIdx];
-  document.getElementById('revealTitle').textContent =
-    players[playerIdx] + ', this is YOUR secret character:';
-  document.getElementById('revealEmoji').textContent = sec.emoji;
-  document.getElementById('revealName').textContent  = sec.name + ' (' + sec.series + ')';
-  document.getElementById('revealNext').textContent  =
-    playerIdx === 0 ? players[1] : 'Player 1 to start';
-
-  const el = document.getElementById('secretReveal');
-  el.classList.add('show');
+  document.getElementById('revealTitle').textContent = players[playerIdx] + ', this is YOUR secret character:';
+  const revealImgUrl = charImages[sec.malId] || '';
+  document.getElementById('revealEmoji').innerHTML =
+    `<img class="reveal-img" data-malid="${sec.malId}" src="${revealImgUrl}" alt="${sec.name}" style="width:100px;height:100px;object-fit:cover;border-radius:10px;${revealImgUrl ? '' : 'display:none'}"><span style="${revealImgUrl ? 'display:none' : 'font-size:3rem'}">${sec.emoji}</span>`;
+  document.getElementById('revealName').textContent = sec.name + ' (' + sec.series + ')';
+  document.getElementById('revealNext').textContent = playerIdx === 0 ? players[1] : 'Player 1 to start';
+  document.getElementById('secretReveal').classList.add('show');
 }
 
 function hideReveal() {
@@ -520,16 +503,12 @@ function hideReveal() {
   if (_revealCallback) { _revealCallback(); _revealCallback = null; }
 }
 
-// ─────────────────────────────────────────────
-//  TURN MANAGEMENT
-// ─────────────────────────────────────────────
 function renderTurn() {
   refreshBoards();
   const p = currentTurn;
   document.getElementById('turnLabel').textContent   = players[p];
   document.getElementById('actionTitle').textContent = players[p];
 
-  // Build trait buttons
   const container = document.getElementById('traitButtons');
   container.innerHTML = '';
   QUESTIONS.forEach((q, qi) => {
@@ -541,12 +520,10 @@ function renderTurn() {
     container.appendChild(btn);
   });
 
-  // Guess select — opponent's characters
-  const opp = 1 - p;
   const sel = document.getElementById('guessSelect');
   sel.innerHTML = '';
   CHARS.forEach((c, i) => {
-    if (!eliminated[p].has(i)) { // only non-eliminated chars on opponent board (player tracks by their own board)
+    if (!eliminated[p].has(i)) {
       const opt = document.createElement('option');
       opt.value = i;
       opt.textContent = c.emoji + ' ' + c.name;
@@ -560,16 +537,11 @@ function askQuestion(qi) {
   const p   = currentTurn;
   const opp = 1 - p;
   const q   = QUESTIONS[qi];
-
   askedQuestions[p].add(qi);
-
   const secret = secrets[opp];
   const answer = secret[q.key] === q.val;
   const ansStr = answer ? 'YES ✅' : 'NO ❌';
-
   addLog(`<span class="sys">${players[p]}</span> asked: <em>${q.label}</em> → <span class="${answer ? 'yes' : 'no'}">${ansStr}</span>`);
-
-  // Re-render trait buttons
   renderTurn();
 }
 
@@ -580,15 +552,8 @@ function makeGuess() {
   const idx = parseInt(document.getElementById('guessSelect').value);
   const guessed = CHARS[idx];
   const correct = guessed === secrets[opp];
-
   addLog(`<span class="sys">${players[p]}</span> guessed: <strong>${guessed.emoji} ${guessed.name}</strong> → <span class="${correct ? 'yes' : 'no'}">${correct ? '🎉 CORRECT!' : '❌ Wrong!'}</span>`);
-
-  if (correct) {
-    endGame(p);
-  } else {
-    // Wrong guess = lose
-    endGame(opp);
-  }
+  if (correct) { endGame(p); } else { endGame(opp); }
 }
 
 function endTurn() {
@@ -599,22 +564,14 @@ function endTurn() {
   renderTurn();
 }
 
-// ─────────────────────────────────────────────
-//  WIN
-// ─────────────────────────────────────────────
 function endGame(winnerIdx) {
   gameOver = true;
   const opp = 1 - winnerIdx;
   document.getElementById('winTitle').textContent = '🏆 ' + players[winnerIdx] + ' Wins!';
-  document.getElementById('winBody').textContent  =
-    players[opp] + "'s secret character was " +
-    secrets[opp].emoji + ' ' + secrets[opp].name + '.';
+  document.getElementById('winBody').textContent  = players[opp] + "'s secret character was " + secrets[opp].emoji + ' ' + secrets[opp].name + '.';
   document.querySelector('.modal-overlay').classList.add('show');
 }
 
-// ─────────────────────────────────────────────
-//  LOG
-// ─────────────────────────────────────────────
 function addLog(html) {
   const log = document.getElementById('log');
   const p   = document.createElement('p');
