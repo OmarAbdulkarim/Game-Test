@@ -319,7 +319,10 @@
     <div class="name" id="revealName"></div>
   </div>
   <p>Show this to <span id="revealNext"></span>, then pass the device.</p>
-  <button class="btn btn-primary" onclick="hideReveal()">I've seen it &mdash; Pass</button>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+    <button class="btn btn-danger" onclick="rerollSecret()">🔀 Get a Different Character</button>
+    <button class="btn btn-primary" onclick="hideReveal()">I've seen it &mdash; Pass</button>
+  </div>
 </div>
 
 <script>
@@ -485,9 +488,11 @@ function toggleEliminate(boardPlayer, charIdx) {
 }
 
 let _revealCallback = null;
+let _revealPlayerIdx = 0;
 
 function showSecretReveal(playerIdx, callback) {
   _revealCallback = callback;
+  _revealPlayerIdx = playerIdx;
   const sec = secrets[playerIdx];
   document.getElementById('revealTitle').textContent = players[playerIdx] + ', this is YOUR secret character:';
   const revealImgUrl = charImages[sec.malId] || '';
@@ -496,6 +501,36 @@ function showSecretReveal(playerIdx, callback) {
   document.getElementById('revealName').textContent = sec.name + ' (' + sec.series + ')';
   document.getElementById('revealNext').textContent = playerIdx === 0 ? players[1] : 'Player 1 to start';
   document.getElementById('secretReveal').classList.add('show');
+}
+
+function rerollSecret() {
+  const p = _revealPlayerIdx;
+  const other = secrets[1 - p];
+  let newIdx;
+  do { newIdx = Math.floor(Math.random() * CHARS.length); } while (CHARS[newIdx] === other || CHARS[newIdx] === secrets[p]);
+  secrets[p] = CHARS[newIdx];
+  // Re-render the reveal card with the new character
+  const sec = secrets[p];
+  const revealImgUrl = charImages[sec.malId] || '';
+  document.getElementById('revealEmoji').innerHTML =
+    `<img class="reveal-img" data-malid="${sec.malId}" src="${revealImgUrl}" alt="${sec.name}" style="width:100px;height:100px;object-fit:cover;border-radius:10px;${revealImgUrl ? '' : 'display:none'}"><span style="${revealImgUrl ? 'display:none' : 'font-size:3rem'}">${sec.emoji}</span>`;
+  document.getElementById('revealName').textContent = sec.name + ' (' + sec.series + ')';
+  // Trigger image fetch if not already loaded
+  if (!revealImgUrl && sec.malId) {
+    fetch(`https://api.jikan.moe/v4/characters/${sec.malId}`)
+      .then(r => r.json())
+      .then(data => {
+        const url = data?.data?.images?.jpg?.image_url;
+        if (url) {
+          charImages[sec.malId] = url;
+          document.querySelectorAll(`.reveal-img[data-malid="${sec.malId}"]`).forEach(img => {
+            img.src = url; img.style.display = 'block'; img.nextElementSibling.style.display = 'none';
+          });
+        }
+      }).catch(() => {});
+  }
+  // Update the board to reflect the new secret
+  refreshBoards();
 }
 
 function hideReveal() {
